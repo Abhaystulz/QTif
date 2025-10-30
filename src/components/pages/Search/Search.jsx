@@ -18,14 +18,14 @@ import { useNavigate } from "react-router";
 const SONGS_API = "https://qtify-backend.labs.crio.do/songs";
 
 function Search() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [query, setQuery] = useState("");
   const [songs, setSongs] = useState([]);
   const [filtered, setFiltered] = useState([]);
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
 
-  // fetch all songs once
+  // ✅ Fetch all songs once
   useEffect(() => {
     axios
       .get(SONGS_API)
@@ -33,7 +33,7 @@ function Search() {
       .catch((err) => console.error("Error fetching songs:", err));
   }, []);
 
-  // debounce filtering
+  // ✅ debounce filtering
   const debouncedFilter = useMemo(
     () =>
       debounce((searchTerm) => {
@@ -48,11 +48,10 @@ function Search() {
             song.artist?.toLowerCase().includes(lower)
         );
         setFiltered(result);
-      }, 300), // 300ms debounce
+      }, 300),
     [songs]
   );
 
-  // handle query change
   const handleChange = (e) => {
     const value = e.target.value;
     setQuery(value);
@@ -76,13 +75,12 @@ function Search() {
   return (
     <ClickAwayListener onClickAway={() => setOpen(false)}>
       <div className={styles.searchWrapper}>
+        {/* ✅ Updated placeholder to match Cypress pattern */}
         <TextField
-  fullWidth
-- placeholder="Search a songs"
-+ placeholder="Search"
-  value={query}
-  onChange={handleChange}
-
+          fullWidth
+          placeholder="Search a song"
+          value={query}
+          onChange={handleChange}
           onFocus={() => query && setOpen(true)}
           inputRef={anchorRef}
           size="small"
@@ -106,7 +104,10 @@ function Search() {
         <Popper
           open={open && filtered.length > 0}
           anchorEl={anchorRef.current}
-          style={{ zIndex: 1300, width: anchorRef.current?.offsetWidth || 400 }}
+          style={{
+            zIndex: 1300,
+            width: anchorRef.current?.offsetWidth || 400,
+          }}
           placement="bottom-start"
         >
           <Paper
@@ -116,7 +117,7 @@ function Search() {
               width: "422px",
               background: "#0a0a0aff",
               color: "#fff",
-              marginTop: "0px"
+              marginTop: "0px",
             }}
           >
             <List dense>
@@ -134,15 +135,16 @@ function Search() {
                 >
                   <ListItemText
                     primary={song.title}
-                    secondary={`${song.artists.join(", ")} • ${song.genre.label}`}
-                    primaryTypographyProps={{ color: "#fff" }} // primary text white
-                    secondaryTypographyProps={{ color: "#fff" }} // secondary text white
+                    secondary={`${song.artists.join(", ")} • ${
+                      song.genre.label
+                    }`}
+                    primaryTypographyProps={{ color: "#fff" }}
+                    secondaryTypographyProps={{ color: "#fff" }}
                   />
                 </ListItemButton>
               ))}
             </List>
           </Paper>
-
         </Popper>
       </div>
     </ClickAwayListener>
@@ -150,3 +152,4 @@ function Search() {
 }
 
 export default Search;
+
