@@ -77,10 +77,12 @@ function Search() {
     <ClickAwayListener onClickAway={() => setOpen(false)}>
       <div className={styles.searchWrapper}>
         <TextField
-          fullWidth
-          placeholder="Search songs..."
-          value={query}
-          onChange={handleChange}
+  fullWidth
+- placeholder="Search a songs"
++ placeholder="Search"
+  value={query}
+  onChange={handleChange}
+
           onFocus={() => query && setOpen(true)}
           inputRef={anchorRef}
           size="small"
